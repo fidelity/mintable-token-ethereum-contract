@@ -1,0 +1,1 @@
+c9d3518aad15b57221252039415cabe277344f8ee74b5e22d54f9ee6b3677b4c  ./flat-deploy/MintableToken.sol

@@ -1,0 +1,1 @@
+90a3f0664a9c90a5425ab35273ea4b45bf3166b3f0eb5db8188da64ab598f590  ./flat-deploy/output/MintableToken.bin
