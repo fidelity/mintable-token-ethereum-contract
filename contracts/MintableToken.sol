@@ -7,11 +7,11 @@ import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 // Custom modules
-import "./restrictable.sol";
-import "./mintAllocated.sol";
-import "./errorCoded.sol";
-import "./roleManaged.sol";
-import "./safeAccessControlEnumerableUpgradeable.sol";
+import "./RestrictableUpgradeable.sol";
+import "./MintAllocatedUpgradeable.sol";
+import "./ErrorCoded.sol";
+import "./RoleManaged.sol";
+import "./SafeAccessControlEnumerableUpgradeable.sol";
 
 /**
  * @title MintableToken
@@ -20,8 +20,8 @@ import "./safeAccessControlEnumerableUpgradeable.sol";
 
 contract MintableToken is
     UUPSUpgradeable,
-    Restrictable,
-    MintAllocated,
+    RestrictableUpgradeable,
+    MintAllocatedUpgradeable,
     SafeAccessControlEnumerableUpgradeable
 {
     using RoleManaged for bytes32;
@@ -64,8 +64,8 @@ contract MintableToken is
         __ERC165_init();
         __ERC1967Upgrade_init();
         //custom features
-        __MintAllocated_init();
-        __Restrictable_init();
+        __MintAllocatedUpgradeable_init();
+        __RestrictableUpgradeable_init();
         //RBAC
         _grantRole(DEFAULT_ADMIN_ROLE, _admin);
     }

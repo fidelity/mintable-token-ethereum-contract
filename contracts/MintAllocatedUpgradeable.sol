@@ -7,24 +7,27 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
-import "./errorCoded.sol";
-import "./roleManaged.sol";
+import "./ErrorCoded.sol";
+import "./RoleManaged.sol";
 
 /**
- * @title MintAllocated
- * @dev MintAllocated enables token minting by addresses with the minter role
+ * @title MintAllocatedUpgradeable
+ * @dev MintAllocatedUpgradeable enables token minting by addresses with the minter role
  * in accordance with allotments set by mint allocators
  */
 
-contract MintAllocated is
+contract MintAllocatedUpgradeable is
     Initializable,
     AccessControlEnumerableUpgradeable,
     PausableUpgradeable,
     ERC20Upgradeable
 {
-    function __MintAllocated_init() internal onlyInitializing {}
+    function __MintAllocatedUpgradeable_init() internal onlyInitializing {}
 
-    function __MintAllocated_init_unchained() internal onlyInitializing {}
+    function __MintAllocatedUpgradeable_init_unchained()
+        internal
+        onlyInitializing
+    {}
 
     /**
      * @dev Mint Allocation is a per-minter allocation which allows minters to mint a certain number of tokens
