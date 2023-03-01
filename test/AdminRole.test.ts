@@ -97,7 +97,7 @@ describe("Admin Renouncing Role", async () => {
     await expect(
       token.connect(other).renounceRole(defaultAdminRole, other.address)
     ).to.be.revertedWith(
-      "MintableToken: Default Admin cannot renounce own role"
+      "SafeAccessControlEnumerable: Default Admin cannot renounce own role"
     );
 
     expect(await token.hasRole(defaultAdminRole, other.address)).to.equal(true);
@@ -109,7 +109,7 @@ describe("Admin Renouncing Role", async () => {
     await expect(
       token.connect(admin).renounceRole(defaultAdminRole, admin.address)
     ).to.be.revertedWith(
-      "MintableToken: Default Admin cannot renounce own role"
+      "SafeAccessControlEnumerable: Default Admin cannot renounce own role"
     );
   });
 
@@ -119,7 +119,7 @@ describe("Admin Renouncing Role", async () => {
     await expect(
       token.connect(admin).revokeRole(defaultAdminRole, admin.address)
     ).to.be.revertedWith(
-      "MintableToken: Default Admin cannot renounce own role"
+      "SafeAccessControlEnumerable: Default Admin cannot renounce own role"
     );
   });
 
