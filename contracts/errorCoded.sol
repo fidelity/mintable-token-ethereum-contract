@@ -22,9 +22,6 @@ library ErrorCoded {
         "MintableToken: Unable to adjust the mint allocation for a non-minter";
     string public constant ERR_7 =
         "MintableToken: Admin address cannot be set to 0";
-    string public constant ERR_8 = "MintableToken: Address must be a minter.";
-    string public constant ERR_9 =
-        "MintableToken: Decrease amount can not be greater than current amount of Mint allocated";
     string public constant ERR_10 =
         "MintableToken: Can't revoke or renounce role of the Default Admin when there is only one remaining";
     string public constant ERR_11 = "MintableToken: Arithmetic overflow";
