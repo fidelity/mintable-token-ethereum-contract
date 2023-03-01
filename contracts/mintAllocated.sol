@@ -47,7 +47,7 @@ contract MintAllocated is
     modifier isMinter(address actionAccount) {
         require(
             hasRole(RoleManaged.MINTER_ROLE, actionAccount),
-            ErrorCoded.ERR_6
+            ErrorCoded.ERR_ONLY_MINTERS_HAVE_MINT_ALLOCATIONS
         );
         _;
     }
@@ -73,7 +73,7 @@ contract MintAllocated is
     {
         require(
             type(uint).max - mintAllocation[minter] >= amount,
-            ErrorCoded.ERR_11
+            ErrorCoded.ERR_ARITHMETIC_OVERFLOW
         );
         unchecked {
             mintAllocation[minter] = mintAllocation[minter] + amount;
@@ -130,7 +130,10 @@ contract MintAllocated is
         address to,
         uint256 amount
     ) external virtual onlyRole(RoleManaged.MINTER_ROLE) {
-        require(amount <= mintAllocation[_msgSender()], ErrorCoded.ERR_4);
+        require(
+            amount <= mintAllocation[_msgSender()],
+            ErrorCoded.ERR_INSUFFICIENT_MINT_ALLOCATION
+        );
         _mint(to, amount);
         unchecked {
             mintAllocation[_msgSender()] =

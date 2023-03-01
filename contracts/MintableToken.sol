@@ -54,7 +54,7 @@ contract MintableToken is
         string calldata _symbol,
         address _admin
     ) external initializer {
-        require(_admin != address(0), ErrorCoded.ERR_7);
+        require(_admin != address(0), ErrorCoded.ERR_ADMIN_ADDRESS_INVALID);
 
         __ERC20_init(_name, _symbol);
         __Pausable_init();
@@ -118,7 +118,7 @@ contract MintableToken is
         uint256 currentAllowance = allowance(_msgSender(), spender);
         require(
             type(uint).max - currentAllowance >= addedValue,
-            ErrorCoded.ERR_11
+            ErrorCoded.ERR_ARITHMETIC_OVERFLOW
         );
         unchecked {
             _modifyAllowance(spender, currentAllowance + addedValue);
@@ -190,14 +190,17 @@ contract MintableToken is
         whenNotRestricted(tx.origin)
         whenNotPaused
     {
-        require(to != address(this), ErrorCoded.ERR_12);
+        require(to != address(this), ErrorCoded.ERR_INVALID_RECIPIENT);
         ERC20Upgradeable._beforeTokenTransfer(from, to, amount);
     }
 
     function _authorizeUpgrade(
         address newImplementation
     ) internal view override onlyRole(RoleManaged.UPGRADER_ROLE) {
-        require(newImplementation.code.length > 0, ErrorCoded.ERR_3);
+        require(
+            newImplementation.code.length > 0,
+            ErrorCoded.ERR_CONTRACT_NOT_DEPLOYED
+        );
     }
 
     function _modifyAllowance(address spender, uint256 value) internal {
