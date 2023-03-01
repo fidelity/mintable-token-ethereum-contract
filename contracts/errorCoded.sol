@@ -15,7 +15,7 @@ library ErrorCoded {
     string public constant ERR_CONTRACT_NOT_DEPLOYED =
         "Proxiable: Contract must be deployed prior to upgrading";
     string public constant ERR_INSUFFICIENT_MINT_ALLOCATION =
-        "MintableToken: Amount must be less than the current mint allocation for a minter";
+        "MintableToken: Amount must be less than or equal to the current mint allocation for a minter";
     string public constant ERR_DEFAULT_ADMIN_CANNOT_RENOUNCE =
         "MintableToken: Default Admin cannot renounce own role";
     string public constant ERR_ONLY_MINTERS_HAVE_MINT_ALLOCATIONS =
