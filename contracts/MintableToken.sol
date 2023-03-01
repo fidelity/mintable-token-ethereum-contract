@@ -121,7 +121,11 @@ contract MintableToken is
             ErrorCoded.ERR_11
         );
         unchecked {
-            _modifyAllowance(spender, currentAllowance + addedValue);
+            ERC20Upgradeable._approve(
+                _msgSender(),
+                spender,
+                currentAllowance + addedValue
+            );
         }
         return true;
     }
@@ -149,7 +153,7 @@ contract MintableToken is
             ? currentAllowance - subtractedValue
             : 0;
 
-        _modifyAllowance(spender, newAllowance);
+        ERC20Upgradeable._approve(_msgSender(), spender, newAllowance);
         return true;
     }
 
@@ -198,9 +202,5 @@ contract MintableToken is
         address newImplementation
     ) internal view override onlyRole(RoleManaged.UPGRADER_ROLE) {
         require(newImplementation.code.length > 0, ErrorCoded.ERR_3);
-    }
-
-    function _modifyAllowance(address spender, uint256 value) internal {
-        ERC20Upgradeable._approve(_msgSender(), spender, value);
     }
 }
