@@ -3,14 +3,10 @@
 pragma solidity 0.8.9;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 // Custom modules
 import "./restrictable.sol";
-import "./mintAllocated.sol";
-import "./errorCoded.sol";
-import "./roleManaged.sol";
 import "./safeAccessControlEnumerableUpgradeable.sol";
 
 /**

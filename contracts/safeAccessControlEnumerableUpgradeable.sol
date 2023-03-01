@@ -5,11 +5,8 @@ pragma solidity 0.8.9;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableMapUpgradeable.sol";
 
 import "./mintAllocated.sol";
-import "./errorCoded.sol";
-import "./roleManaged.sol";
 
 /**
  * @title SafeAccessControlEnumerableUpgradeable
