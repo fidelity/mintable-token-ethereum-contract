@@ -60,10 +60,12 @@ contract MintableToken is
         __Pausable_init();
         __UUPSUpgradeable_init();
         __Context_init();
-        __SafeAccessControlEnumerableUpgradeable_init();
+        __AccessControl_init();
+        __AccessControlEnumerable_init();
         __ERC165_init();
         __ERC1967Upgrade_init();
         //custom features
+        __SafeAccessControlEnumerable_init();
         __MintAllocated_init();
         __Restrictable_init();
         //RBAC

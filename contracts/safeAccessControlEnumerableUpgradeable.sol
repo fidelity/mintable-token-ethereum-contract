@@ -25,12 +25,12 @@ contract SafeAccessControlEnumerableUpgradeable is
     ERC20Upgradeable,
     MintAllocated
 {
-    function __SafeAccessControlEnumerableUpgradeable_init()
+    function __SafeAccessControlEnumerable_init()
         internal
         onlyInitializing
     {}
 
-    function __SafeAccessControlEnumerableUpgradeable_init_unchained()
+    function __SafeAccessControlEnumerable_init_unchained()
         internal
         onlyInitializing
     {}
