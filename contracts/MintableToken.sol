@@ -158,7 +158,16 @@ contract MintableToken is
     function transfer(
         address to,
         uint256 amount
-    ) public virtual override whenNotPaused returns (bool) {
+    )
+        public
+        virtual
+        override
+        whenNotPaused
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(to)
+        whenNotRestricted(tx.origin)
+        returns (bool)
+    {
         address owner = _msgSender();
         ERC20Upgradeable._transfer(owner, to, amount);
         return true;
@@ -183,6 +192,9 @@ contract MintableToken is
         override
         whenNotPaused
         whenNotRestricted(_msgSender())
+        whenNotRestricted(from)
+        whenNotRestricted(to)
+        whenNotRestricted(tx.origin)
         returns (bool)
     {
         ERC20Upgradeable._spendAllowance(from, _msgSender(), amount);
@@ -200,13 +212,7 @@ contract MintableToken is
         address from,
         address to,
         uint256 amount
-    )
-        internal
-        override
-        whenNotRestricted(from)
-        whenNotRestricted(to)
-        whenNotRestricted(tx.origin)
-    {
+    ) internal override {
         require(to != address(this), ErrorCoded.ERR_INVALID_RECIPIENT);
         ERC20Upgradeable._beforeTokenTransfer(from, to, amount);
     }

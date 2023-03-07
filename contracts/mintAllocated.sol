@@ -8,6 +8,7 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgrad
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
 import "./errorCoded.sol";
+import "./restrictable.sol";
 import "./roleManaged.sol";
 
 /**
@@ -20,7 +21,8 @@ contract MintAllocated is
     Initializable,
     AccessControlEnumerableUpgradeable,
     PausableUpgradeable,
-    ERC20Upgradeable
+    ERC20Upgradeable,
+    Restrictable
 {
     function __MintAllocated_init() internal onlyInitializing {}
 
@@ -129,7 +131,15 @@ contract MintAllocated is
     function mint(
         address to,
         uint256 amount
-    ) external virtual whenNotPaused onlyRole(RoleManaged.MINTER_ROLE) {
+    )
+        external
+        virtual
+        whenNotPaused
+        onlyRole(RoleManaged.MINTER_ROLE)
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(to)
+        whenNotRestricted(tx.origin)
+    {
         require(
             amount <= mintAllocation[_msgSender()],
             ErrorCoded.ERR_INSUFFICIENT_MINT_ALLOCATION
@@ -152,7 +162,14 @@ contract MintAllocated is
      */
     function burn(
         uint256 amount
-    ) external virtual whenNotPaused onlyRole(RoleManaged.MINTER_ROLE) {
+    )
+        external
+        virtual
+        whenNotPaused
+        onlyRole(RoleManaged.MINTER_ROLE)
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(tx.origin)
+    {
         _burn(_msgSender(), amount);
         emit Burn(_msgSender(), amount);
     }
@@ -166,7 +183,15 @@ contract MintAllocated is
     function burnFrom(
         address account,
         uint256 amount
-    ) external virtual whenNotPaused onlyRole(RoleManaged.MINTER_ROLE) {
+    )
+        external
+        virtual
+        whenNotPaused
+        onlyRole(RoleManaged.MINTER_ROLE)
+        whenNotRestricted(account)
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(tx.origin)
+    {
         if (account != _msgSender()) {
             _spendAllowance(account, _msgSender(), amount);
         }
