@@ -6,7 +6,7 @@ const { deployTokenFixtureWithRoles } = require("./shared-setup");
 const allocationAmount = 1000;
 const mintAmount = 500;
 const ADDRESS_DENIED_ERROR =
-  "MintableToken: Unable to transfer to or from addresses on transfer restriction list";
+  "Restrictable: Unable to transfer to or from addresses on transfer restriction list";
 
 async function deployTransferFixture() {
   const fixture = await deployTokenFixtureWithRoles();

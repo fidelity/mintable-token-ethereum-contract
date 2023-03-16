@@ -4,7 +4,7 @@ const { ethers } = require("hardhat");
 
 const { deployTokenFixtureWithRoles } = require("./shared-setup");
 const ADDRESS_DENIED_ERROR =
-  "MintableToken: Unable to transfer to or from addresses on transfer restriction list";
+  "Restrictable: Unable to transfer to or from addresses on transfer restriction list";
 
 describe("Increase/Decrease Allowance", async () => {
   it("Should allow owner to add/decrease token range to be spend by the spender on behalf of owner", async () => {

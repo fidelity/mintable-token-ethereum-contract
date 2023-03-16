@@ -129,7 +129,7 @@ describe("Minting functions", async () => {
       await expect(
         token.connect(minter).mint(other.address, 51)
       ).to.be.revertedWith(
-        "Amount must be less than the current mint allocation for a minter"
+        "Amount must be less than or equal to the current mint allocation for a minter"
       );
     });
   });
