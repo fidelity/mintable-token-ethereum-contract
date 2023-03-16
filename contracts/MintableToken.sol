@@ -117,7 +117,11 @@ contract MintableToken is
             ErrorCoded.ERR_ARITHMETIC_OVERFLOW_ALLOWANCE
         );
         unchecked {
-            _modifyAllowance(spender, currentAllowance + addedValue);
+            ERC20Upgradeable._approve(
+                _msgSender(),
+                spender,
+                currentAllowance + addedValue
+            );
         }
         return true;
     }
@@ -145,7 +149,7 @@ contract MintableToken is
             ? currentAllowance - subtractedValue
             : 0;
 
-        _modifyAllowance(spender, newAllowance);
+        ERC20Upgradeable._approve(_msgSender(), spender, newAllowance);
         return true;
     }
 
@@ -224,9 +228,5 @@ contract MintableToken is
             newImplementation.code.length > 0,
             ErrorCoded.ERR_CONTRACT_NOT_DEPLOYED
         );
-    }
-
-    function _modifyAllowance(address spender, uint256 value) internal {
-        ERC20Upgradeable._approve(_msgSender(), spender, value);
     }
 }
