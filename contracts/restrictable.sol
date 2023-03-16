@@ -40,7 +40,7 @@ contract Restrictable is
     modifier whenNotRestricted(address actionAccount) {
         require(
             !(isTransferRestrictionImposed(actionAccount)),
-            ErrorCoded.ERR_1
+            ErrorCoded.ERR_TRANSFER_RESTRICTED
         );
         _;
     }
@@ -73,7 +73,10 @@ contract Restrictable is
     function restrictTransfers(
         address restrictedAddress
     ) external virtual onlyRole(RoleManaged.TOKEN_TRANSFER_CONTROLLER_ROLE) {
-        require(restrictedAddress != address(0), ErrorCoded.ERR_2);
+        require(
+            restrictedAddress != address(0),
+            ErrorCoded.ERR_TRANSFER_RESTRICTION_INVALID
+        );
         EnumerableSetUpgradeable.add(restricted, restrictedAddress);
         emit TransferRestrictionImposed(restrictedAddress);
     }
