@@ -113,8 +113,8 @@ contract MintableToken is
     {
         uint256 currentAllowance = allowance(_msgSender(), spender);
         require(
-            type(uint).max - currentAllowance >= addedValue,
-            ErrorCoded.ERR_ARITHMETIC_OVERFLOW
+            type(uint256).max - currentAllowance >= addedValue,
+            ErrorCoded.ERR_ARITHMETIC_OVERFLOW_ALLOWANCE
         );
         unchecked {
             _modifyAllowance(spender, currentAllowance + addedValue);

@@ -74,8 +74,8 @@ contract MintAllocated is
         isMinter(minter)
     {
         require(
-            type(uint).max - mintAllocation[minter] >= amount,
-            ErrorCoded.ERR_ARITHMETIC_OVERFLOW
+            type(uint256).max - mintAllocation[minter] >= amount,
+            ErrorCoded.ERR_ARITHMETIC_OVERFLOW_MINT
         );
         unchecked {
             mintAllocation[minter] = mintAllocation[minter] + amount;

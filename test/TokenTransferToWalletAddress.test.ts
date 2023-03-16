@@ -114,7 +114,7 @@ describe("Verify Token transfer to a wallet address", async () => {
         .connect(validIssuerAccount)
         .transfer(holderWallet.address, mintAllocationAmount)
     ).to.be.revertedWith(
-      "MintableToken: Unable to transfer to or from addresses on transfer restriction list"
+      "Restrictable: Unable to transfer to or from addresses on transfer restriction list"
     );
   });
 
@@ -148,7 +148,7 @@ describe("Verify Token transfer to a wallet address", async () => {
         .connect(validIssuerAccount)
         .transfer(holderWallet.address, mintAllocationAmount)
     ).to.be.revertedWith(
-      "MintableToken: Unable to transfer to or from addresses on transfer restriction list"
+      "Restrictable: Unable to transfer to or from addresses on transfer restriction list"
     );
   });
 
