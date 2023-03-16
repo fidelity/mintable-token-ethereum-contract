@@ -76,7 +76,11 @@ contract Restrictable is
             restrictedAddress != address(0),
             ErrorCoded.ERR_TRANSFER_RESTRICTION_INVALID
         );
-        EnumerableSetUpgradeable.add(restricted, restrictedAddress);
+        bool success = EnumerableSetUpgradeable.add(
+            restricted,
+            restrictedAddress
+        );
+        require(success, ErrorCoded.ERR_RESTRICT_TRANSFERS_ADD);
         emit TransferRestrictionImposed(restrictedAddress);
     }
 
@@ -90,7 +94,11 @@ contract Restrictable is
     function unrestrictTransfers(
         address restrictedAddress
     ) external virtual onlyRole(RoleManaged.TOKEN_TRANSFER_CONTROLLER_ROLE) {
-        EnumerableSetUpgradeable.remove(restricted, restrictedAddress);
+        bool success = EnumerableSetUpgradeable.remove(
+            restricted,
+            restrictedAddress
+        );
+        require(success, ErrorCoded.ERR_RESTRICT_TRANSFERS_REMOVE);
         emit TransferRestrictionRemoved(restrictedAddress);
     }
 

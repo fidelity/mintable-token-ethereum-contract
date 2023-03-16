@@ -29,6 +29,22 @@ describe("Restricting Transfers", async () => {
     );
   });
 
+  it("Should revert when restricting a user that is already on the token transfer restriction list", async () => {
+    const { tokenTransferController, user1, token } = await loadFixture(
+      deployTokenFixtureWithRoles
+    );
+
+    await token
+      .connect(tokenTransferController)
+      .restrictTransfers(user1.address);
+
+    await expect(
+      token.connect(tokenTransferController).restrictTransfers(user1.address)
+    ).to.be.revertedWith(
+      "Restrictable: User already in transfer restriction list"
+    );
+  });
+
   it("Should emit TransferRestrictionImposed event", async () => {
     const { tokenTransferController, user1, token } = await loadFixture(
       deployTokenFixtureWithRoles
@@ -67,10 +83,25 @@ describe("Verify unrestrictTransfers", async () => {
       `AccessControl: account ${user1.address.toLowerCase()} is missing role ${tokenTransferControllerRole.toLocaleLowerCase()}`
     );
   });
+
+  it("Should revert when unrestricting a user that is not on the token transfer restriction list", async () => {
+    const { tokenTransferController, user1, token } = await loadFixture(
+      deployTokenFixtureWithRoles
+    );
+    await expect(
+      token.connect(tokenTransferController).unrestrictTransfers(user1.address)
+    ).to.be.revertedWith("Restrictable: User not in transfer restriction list");
+  });
+
   it("Should emit TransferRestrictionRemoved event", async () => {
     const { tokenTransferController, user1, token } = await loadFixture(
       deployTokenFixtureWithRoles
     );
+
+    await token
+      .connect(tokenTransferController)
+      .restrictTransfers(user1.address);
+
     await expect(
       token.connect(tokenTransferController).unrestrictTransfers(user1.address)
     )

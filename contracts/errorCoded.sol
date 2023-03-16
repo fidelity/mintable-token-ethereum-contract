@@ -32,4 +32,8 @@ library ErrorCoded {
         "MintableToken: Token cannot be transferred to token contract";
     string public constant ERR_USER_DOES_NOT_HAVE_ROLE =
         "SafeAccessControlEnumerable: User does not have role";
+    string public constant ERR_RESTRICT_TRANSFERS_ADD =
+        "Restrictable: User already in transfer restriction list";
+    string public constant ERR_RESTRICT_TRANSFERS_REMOVE =
+        "Restrictable: User not in transfer restriction list";
 }
