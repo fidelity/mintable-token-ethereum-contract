@@ -126,26 +126,26 @@ describe("Mint Allocator functions", async () => {
           .connect(mintAllocator)
           .increaseMintAllocation(tokenTransferController.address, 100)
       ).to.be.revertedWith(
-        "MintableToken: Unable to adjust the mint allocation for a non-minter"
+        "MintAllocated: Unable to adjust the mint allocation for a non-minter"
       );
       await expect(
         token
           .connect(mintAllocator)
           .increaseMintAllocation(mintAllocator.address, 100)
       ).to.be.revertedWith(
-        "MintableToken: Unable to adjust the mint allocation for a non-minter"
+        "MintAllocated: Unable to adjust the mint allocation for a non-minter"
       );
       await expect(
         token
           .connect(mintAllocator)
           .increaseMintAllocation(upgrader.address, 100)
       ).to.be.revertedWith(
-        "MintableToken: Unable to adjust the mint allocation for a non-minter"
+        "MintAllocated: Unable to adjust the mint allocation for a non-minter"
       );
       await expect(
         token.connect(mintAllocator).increaseMintAllocation(other.address, 100)
       ).to.be.revertedWith(
-        "MintableToken: Unable to adjust the mint allocation for a non-minter"
+        "MintAllocated: Unable to adjust the mint allocation for a non-minter"
       );
     });
 
@@ -194,7 +194,7 @@ describe("Mint Allocator functions", async () => {
         token
           .connect(mintAllocator)
           .increaseMintAllocation(minter.address, ethers.BigNumber.from("100"))
-      ).to.be.revertedWith("MintableToken: Arithmetic overflow");
+      ).to.be.revertedWith("MintAllocated: Arithmetic overflow");
 
       expect(await token.mintAllocation(minter.address)).to.equal(
         closeToOverflowAmount

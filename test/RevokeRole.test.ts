@@ -323,6 +323,8 @@ describe("Revoke Role", async () => {
 
     await expect(
       token.connect(admin).revokeRole(upgraderRole, minter.address)
-    ).to.be.revertedWith("MintableToken: User does not have role");
+    ).to.be.revertedWith(
+      "SafeAccessControlEnumerable: User does not have role"
+    );
   });
 });
