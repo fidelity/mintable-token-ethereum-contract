@@ -89,7 +89,7 @@ describe("Token Transfer Controller", async () => {
           .connect(tokenTransferController)
           .restrictTransfers(constants.ZERO_ADDRESS)
       ).to.be.revertedWith(
-        "MintableToken: Unable to restrict transfers of 0 address"
+        "Restrictable: Unable to restrict transfers of 0 address"
       );
     });
 
