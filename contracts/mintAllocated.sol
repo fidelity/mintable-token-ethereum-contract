@@ -73,7 +73,7 @@ contract MintAllocated is
     {
         require(
             type(uint256).max - mintAllocation[minter] >= amount,
-            ErrorCoded.ERR_ARITHMETIC_OVERFLOW
+            ErrorCoded.ERR_ARITHMETIC_OVERFLOW_MINT
         );
         unchecked {
             mintAllocation[minter] = mintAllocation[minter] + amount;
