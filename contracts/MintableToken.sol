@@ -3,14 +3,10 @@
 pragma solidity 0.8.9;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 // Custom modules
 import "./restrictable.sol";
-import "./mintAllocated.sol";
-import "./errorCoded.sol";
-import "./roleManaged.sol";
 import "./safeAccessControlEnumerableUpgradeable.sol";
 
 /**
@@ -154,6 +150,30 @@ contract MintableToken is
     }
 
     /**
+     * @dev Moves `amount` tokens from msg.sender() to `to`
+     *
+     * @param to recipient of transfer
+     * @param amount quantity of tokens transferred
+     */
+    function transfer(
+        address to,
+        uint256 amount
+    )
+        public
+        virtual
+        override
+        whenNotPaused
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(to)
+        whenNotRestricted(tx.origin)
+        returns (bool)
+    {
+        address owner = _msgSender();
+        ERC20Upgradeable._transfer(owner, to, amount);
+        return true;
+    }
+
+    /**
      * @dev Moves amount tokens from `from` to `to` using the allowance mechanism. The `amount` is then deducted from the caller’s allowance
      *
      * @param from origin of transfer
@@ -166,7 +186,17 @@ contract MintableToken is
         address from,
         address to,
         uint256 amount
-    ) public virtual override whenNotRestricted(_msgSender()) returns (bool) {
+    )
+        public
+        virtual
+        override
+        whenNotPaused
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(from)
+        whenNotRestricted(to)
+        whenNotRestricted(tx.origin)
+        returns (bool)
+    {
         ERC20Upgradeable._spendAllowance(from, _msgSender(), amount);
         ERC20Upgradeable._transfer(from, to, amount);
         return true;
@@ -182,14 +212,7 @@ contract MintableToken is
         address from,
         address to,
         uint256 amount
-    )
-        internal
-        override
-        whenNotRestricted(from)
-        whenNotRestricted(to)
-        whenNotRestricted(tx.origin)
-        whenNotPaused
-    {
+    ) internal override {
         require(to != address(this), ErrorCoded.ERR_INVALID_RECIPIENT);
         ERC20Upgradeable._beforeTokenTransfer(from, to, amount);
     }
