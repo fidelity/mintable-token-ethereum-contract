@@ -48,8 +48,8 @@ export async function deployTokenFixture() {
   const token = (await upgrades.deployProxy(TokenFactory, initializerArgs, {
     initializer: "initialize",
     libraries: {
-      roleManaged: ROLE.address,
-      errorCoded: ERR.address,
+      RoleManaged: ROLE.address,
+      ErrorCoded: ERR.address,
     },
     kind: "uups",
   })) as MintableToken;

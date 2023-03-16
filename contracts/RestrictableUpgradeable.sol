@@ -7,16 +7,16 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgrad
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 
-import "./errorCoded.sol";
-import "./roleManaged.sol";
+import "./ErrorCoded.sol";
+import "./RoleManaged.sol";
 
 /**
- * @title Restrictable
- * @dev Restrictable allows accounts to be transfer restricted
+ * @title RestrictableUpgradeable
+ * @dev RestrictableUpgradeable allows accounts to be transfer restricted
  * preventing them from sending or receiving tokens
  */
 
-contract Restrictable is
+contract RestrictableUpgradeable is
     Initializable,
     AccessControlEnumerableUpgradeable,
     PausableUpgradeable,
@@ -26,9 +26,12 @@ contract Restrictable is
     //mapping an address to the transfer restriction list
     EnumerableSetUpgradeable.AddressSet private restricted;
 
-    function __Restrictable_init() internal onlyInitializing {}
+    function __RestrictableUpgradeable_init() internal onlyInitializing {}
 
-    function __Restrictable_init_unchained() internal onlyInitializing {}
+    function __RestrictableUpgradeable_init_unchained()
+        internal
+        onlyInitializing
+    {}
 
     /**
      * @dev Emitted when an account is added to, or removed from the transfer restriction list

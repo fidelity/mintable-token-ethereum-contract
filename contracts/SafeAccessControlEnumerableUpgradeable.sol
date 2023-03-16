@@ -6,7 +6,9 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 
-import "./mintAllocated.sol";
+import "./MintAllocatedUpgradeable.sol";
+import "./ErrorCoded.sol";
+import "./RoleManaged.sol";
 
 /**
  * @title SafeAccessControlEnumerableUpgradeable
@@ -20,12 +22,9 @@ contract SafeAccessControlEnumerableUpgradeable is
     Initializable,
     AccessControlEnumerableUpgradeable,
     ERC20Upgradeable,
-    MintAllocated
+    MintAllocatedUpgradeable
 {
-    function __SafeAccessControlEnumerable_init()
-        internal
-        onlyInitializing
-    {}
+    function __SafeAccessControlEnumerable_init() internal onlyInitializing {}
 
     function __SafeAccessControlEnumerable_init_unchained()
         internal
