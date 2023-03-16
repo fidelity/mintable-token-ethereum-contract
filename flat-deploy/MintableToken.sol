@@ -2850,538 +2850,7 @@ contract ERC20Upgradeable is Initializable, ContextUpgradeable, IERC20Upgradeabl
 }
 
 
-// File @openzeppelin/contracts-upgradeable/utils/structs/EnumerableMapUpgradeable.sol@v4.8.1
-
-// OpenZeppelin Contracts (last updated v4.8.0) (utils/structs/EnumerableMap.sol)
-// This file was procedurally generated from scripts/generate/templates/EnumerableMap.js.
-
-pragma solidity ^0.8.0;
-
-/**
- * @dev Library for managing an enumerable variant of Solidity's
- * https://solidity.readthedocs.io/en/latest/types.html#mapping-types[`mapping`]
- * type.
- *
- * Maps have the following properties:
- *
- * - Entries are added, removed, and checked for existence in constant time
- * (O(1)).
- * - Entries are enumerated in O(n). No guarantees are made on the ordering.
- *
- * ```
- * contract Example {
- *     // Add the library methods
- *     using EnumerableMap for EnumerableMap.UintToAddressMap;
- *
- *     // Declare a set state variable
- *     EnumerableMap.UintToAddressMap private myMap;
- * }
- * ```
- *
- * The following map types are supported:
- *
- * - `uint256 -> address` (`UintToAddressMap`) since v3.0.0
- * - `address -> uint256` (`AddressToUintMap`) since v4.6.0
- * - `bytes32 -> bytes32` (`Bytes32ToBytes32Map`) since v4.6.0
- * - `uint256 -> uint256` (`UintToUintMap`) since v4.7.0
- * - `bytes32 -> uint256` (`Bytes32ToUintMap`) since v4.7.0
- *
- * [WARNING]
- * ====
- * Trying to delete such a structure from storage will likely result in data corruption, rendering the structure
- * unusable.
- * See https://github.com/ethereum/solidity/pull/11843[ethereum/solidity#11843] for more info.
- *
- * In order to clean an EnumerableMap, you can either remove all elements one by one or create a fresh instance using an
- * array of EnumerableMap.
- * ====
- */
-library EnumerableMapUpgradeable {
-    using EnumerableSetUpgradeable for EnumerableSetUpgradeable.Bytes32Set;
-
-    // To implement this library for multiple types with as little code
-    // repetition as possible, we write it in terms of a generic Map type with
-    // bytes32 keys and values.
-    // The Map implementation uses private functions, and user-facing
-    // implementations (such as Uint256ToAddressMap) are just wrappers around
-    // the underlying Map.
-    // This means that we can only create new EnumerableMaps for types that fit
-    // in bytes32.
-
-    struct Bytes32ToBytes32Map {
-        // Storage of keys
-        EnumerableSetUpgradeable.Bytes32Set _keys;
-        mapping(bytes32 => bytes32) _values;
-    }
-
-    /**
-     * @dev Adds a key-value pair to a map, or updates the value for an existing
-     * key. O(1).
-     *
-     * Returns true if the key was added to the map, that is if it was not
-     * already present.
-     */
-    function set(
-        Bytes32ToBytes32Map storage map,
-        bytes32 key,
-        bytes32 value
-    ) internal returns (bool) {
-        map._values[key] = value;
-        return map._keys.add(key);
-    }
-
-    /**
-     * @dev Removes a key-value pair from a map. O(1).
-     *
-     * Returns true if the key was removed from the map, that is if it was present.
-     */
-    function remove(Bytes32ToBytes32Map storage map, bytes32 key) internal returns (bool) {
-        delete map._values[key];
-        return map._keys.remove(key);
-    }
-
-    /**
-     * @dev Returns true if the key is in the map. O(1).
-     */
-    function contains(Bytes32ToBytes32Map storage map, bytes32 key) internal view returns (bool) {
-        return map._keys.contains(key);
-    }
-
-    /**
-     * @dev Returns the number of key-value pairs in the map. O(1).
-     */
-    function length(Bytes32ToBytes32Map storage map) internal view returns (uint256) {
-        return map._keys.length();
-    }
-
-    /**
-     * @dev Returns the key-value pair stored at position `index` in the map. O(1).
-     *
-     * Note that there are no guarantees on the ordering of entries inside the
-     * array, and it may change when more entries are added or removed.
-     *
-     * Requirements:
-     *
-     * - `index` must be strictly less than {length}.
-     */
-    function at(Bytes32ToBytes32Map storage map, uint256 index) internal view returns (bytes32, bytes32) {
-        bytes32 key = map._keys.at(index);
-        return (key, map._values[key]);
-    }
-
-    /**
-     * @dev Tries to returns the value associated with `key`. O(1).
-     * Does not revert if `key` is not in the map.
-     */
-    function tryGet(Bytes32ToBytes32Map storage map, bytes32 key) internal view returns (bool, bytes32) {
-        bytes32 value = map._values[key];
-        if (value == bytes32(0)) {
-            return (contains(map, key), bytes32(0));
-        } else {
-            return (true, value);
-        }
-    }
-
-    /**
-     * @dev Returns the value associated with `key`. O(1).
-     *
-     * Requirements:
-     *
-     * - `key` must be in the map.
-     */
-    function get(Bytes32ToBytes32Map storage map, bytes32 key) internal view returns (bytes32) {
-        bytes32 value = map._values[key];
-        require(value != 0 || contains(map, key), "EnumerableMap: nonexistent key");
-        return value;
-    }
-
-    /**
-     * @dev Same as {get}, with a custom error message when `key` is not in the map.
-     *
-     * CAUTION: This function is deprecated because it requires allocating memory for the error
-     * message unnecessarily. For custom revert reasons use {tryGet}.
-     */
-    function get(
-        Bytes32ToBytes32Map storage map,
-        bytes32 key,
-        string memory errorMessage
-    ) internal view returns (bytes32) {
-        bytes32 value = map._values[key];
-        require(value != 0 || contains(map, key), errorMessage);
-        return value;
-    }
-
-    // UintToUintMap
-
-    struct UintToUintMap {
-        Bytes32ToBytes32Map _inner;
-    }
-
-    /**
-     * @dev Adds a key-value pair to a map, or updates the value for an existing
-     * key. O(1).
-     *
-     * Returns true if the key was added to the map, that is if it was not
-     * already present.
-     */
-    function set(
-        UintToUintMap storage map,
-        uint256 key,
-        uint256 value
-    ) internal returns (bool) {
-        return set(map._inner, bytes32(key), bytes32(value));
-    }
-
-    /**
-     * @dev Removes a value from a set. O(1).
-     *
-     * Returns true if the key was removed from the map, that is if it was present.
-     */
-    function remove(UintToUintMap storage map, uint256 key) internal returns (bool) {
-        return remove(map._inner, bytes32(key));
-    }
-
-    /**
-     * @dev Returns true if the key is in the map. O(1).
-     */
-    function contains(UintToUintMap storage map, uint256 key) internal view returns (bool) {
-        return contains(map._inner, bytes32(key));
-    }
-
-    /**
-     * @dev Returns the number of elements in the map. O(1).
-     */
-    function length(UintToUintMap storage map) internal view returns (uint256) {
-        return length(map._inner);
-    }
-
-    /**
-     * @dev Returns the element stored at position `index` in the set. O(1).
-     * Note that there are no guarantees on the ordering of values inside the
-     * array, and it may change when more values are added or removed.
-     *
-     * Requirements:
-     *
-     * - `index` must be strictly less than {length}.
-     */
-    function at(UintToUintMap storage map, uint256 index) internal view returns (uint256, uint256) {
-        (bytes32 key, bytes32 value) = at(map._inner, index);
-        return (uint256(key), uint256(value));
-    }
-
-    /**
-     * @dev Tries to returns the value associated with `key`. O(1).
-     * Does not revert if `key` is not in the map.
-     */
-    function tryGet(UintToUintMap storage map, uint256 key) internal view returns (bool, uint256) {
-        (bool success, bytes32 value) = tryGet(map._inner, bytes32(key));
-        return (success, uint256(value));
-    }
-
-    /**
-     * @dev Returns the value associated with `key`. O(1).
-     *
-     * Requirements:
-     *
-     * - `key` must be in the map.
-     */
-    function get(UintToUintMap storage map, uint256 key) internal view returns (uint256) {
-        return uint256(get(map._inner, bytes32(key)));
-    }
-
-    /**
-     * @dev Same as {get}, with a custom error message when `key` is not in the map.
-     *
-     * CAUTION: This function is deprecated because it requires allocating memory for the error
-     * message unnecessarily. For custom revert reasons use {tryGet}.
-     */
-    function get(
-        UintToUintMap storage map,
-        uint256 key,
-        string memory errorMessage
-    ) internal view returns (uint256) {
-        return uint256(get(map._inner, bytes32(key), errorMessage));
-    }
-
-    // UintToAddressMap
-
-    struct UintToAddressMap {
-        Bytes32ToBytes32Map _inner;
-    }
-
-    /**
-     * @dev Adds a key-value pair to a map, or updates the value for an existing
-     * key. O(1).
-     *
-     * Returns true if the key was added to the map, that is if it was not
-     * already present.
-     */
-    function set(
-        UintToAddressMap storage map,
-        uint256 key,
-        address value
-    ) internal returns (bool) {
-        return set(map._inner, bytes32(key), bytes32(uint256(uint160(value))));
-    }
-
-    /**
-     * @dev Removes a value from a set. O(1).
-     *
-     * Returns true if the key was removed from the map, that is if it was present.
-     */
-    function remove(UintToAddressMap storage map, uint256 key) internal returns (bool) {
-        return remove(map._inner, bytes32(key));
-    }
-
-    /**
-     * @dev Returns true if the key is in the map. O(1).
-     */
-    function contains(UintToAddressMap storage map, uint256 key) internal view returns (bool) {
-        return contains(map._inner, bytes32(key));
-    }
-
-    /**
-     * @dev Returns the number of elements in the map. O(1).
-     */
-    function length(UintToAddressMap storage map) internal view returns (uint256) {
-        return length(map._inner);
-    }
-
-    /**
-     * @dev Returns the element stored at position `index` in the set. O(1).
-     * Note that there are no guarantees on the ordering of values inside the
-     * array, and it may change when more values are added or removed.
-     *
-     * Requirements:
-     *
-     * - `index` must be strictly less than {length}.
-     */
-    function at(UintToAddressMap storage map, uint256 index) internal view returns (uint256, address) {
-        (bytes32 key, bytes32 value) = at(map._inner, index);
-        return (uint256(key), address(uint160(uint256(value))));
-    }
-
-    /**
-     * @dev Tries to returns the value associated with `key`. O(1).
-     * Does not revert if `key` is not in the map.
-     */
-    function tryGet(UintToAddressMap storage map, uint256 key) internal view returns (bool, address) {
-        (bool success, bytes32 value) = tryGet(map._inner, bytes32(key));
-        return (success, address(uint160(uint256(value))));
-    }
-
-    /**
-     * @dev Returns the value associated with `key`. O(1).
-     *
-     * Requirements:
-     *
-     * - `key` must be in the map.
-     */
-    function get(UintToAddressMap storage map, uint256 key) internal view returns (address) {
-        return address(uint160(uint256(get(map._inner, bytes32(key)))));
-    }
-
-    /**
-     * @dev Same as {get}, with a custom error message when `key` is not in the map.
-     *
-     * CAUTION: This function is deprecated because it requires allocating memory for the error
-     * message unnecessarily. For custom revert reasons use {tryGet}.
-     */
-    function get(
-        UintToAddressMap storage map,
-        uint256 key,
-        string memory errorMessage
-    ) internal view returns (address) {
-        return address(uint160(uint256(get(map._inner, bytes32(key), errorMessage))));
-    }
-
-    // AddressToUintMap
-
-    struct AddressToUintMap {
-        Bytes32ToBytes32Map _inner;
-    }
-
-    /**
-     * @dev Adds a key-value pair to a map, or updates the value for an existing
-     * key. O(1).
-     *
-     * Returns true if the key was added to the map, that is if it was not
-     * already present.
-     */
-    function set(
-        AddressToUintMap storage map,
-        address key,
-        uint256 value
-    ) internal returns (bool) {
-        return set(map._inner, bytes32(uint256(uint160(key))), bytes32(value));
-    }
-
-    /**
-     * @dev Removes a value from a set. O(1).
-     *
-     * Returns true if the key was removed from the map, that is if it was present.
-     */
-    function remove(AddressToUintMap storage map, address key) internal returns (bool) {
-        return remove(map._inner, bytes32(uint256(uint160(key))));
-    }
-
-    /**
-     * @dev Returns true if the key is in the map. O(1).
-     */
-    function contains(AddressToUintMap storage map, address key) internal view returns (bool) {
-        return contains(map._inner, bytes32(uint256(uint160(key))));
-    }
-
-    /**
-     * @dev Returns the number of elements in the map. O(1).
-     */
-    function length(AddressToUintMap storage map) internal view returns (uint256) {
-        return length(map._inner);
-    }
-
-    /**
-     * @dev Returns the element stored at position `index` in the set. O(1).
-     * Note that there are no guarantees on the ordering of values inside the
-     * array, and it may change when more values are added or removed.
-     *
-     * Requirements:
-     *
-     * - `index` must be strictly less than {length}.
-     */
-    function at(AddressToUintMap storage map, uint256 index) internal view returns (address, uint256) {
-        (bytes32 key, bytes32 value) = at(map._inner, index);
-        return (address(uint160(uint256(key))), uint256(value));
-    }
-
-    /**
-     * @dev Tries to returns the value associated with `key`. O(1).
-     * Does not revert if `key` is not in the map.
-     */
-    function tryGet(AddressToUintMap storage map, address key) internal view returns (bool, uint256) {
-        (bool success, bytes32 value) = tryGet(map._inner, bytes32(uint256(uint160(key))));
-        return (success, uint256(value));
-    }
-
-    /**
-     * @dev Returns the value associated with `key`. O(1).
-     *
-     * Requirements:
-     *
-     * - `key` must be in the map.
-     */
-    function get(AddressToUintMap storage map, address key) internal view returns (uint256) {
-        return uint256(get(map._inner, bytes32(uint256(uint160(key)))));
-    }
-
-    /**
-     * @dev Same as {get}, with a custom error message when `key` is not in the map.
-     *
-     * CAUTION: This function is deprecated because it requires allocating memory for the error
-     * message unnecessarily. For custom revert reasons use {tryGet}.
-     */
-    function get(
-        AddressToUintMap storage map,
-        address key,
-        string memory errorMessage
-    ) internal view returns (uint256) {
-        return uint256(get(map._inner, bytes32(uint256(uint160(key))), errorMessage));
-    }
-
-    // Bytes32ToUintMap
-
-    struct Bytes32ToUintMap {
-        Bytes32ToBytes32Map _inner;
-    }
-
-    /**
-     * @dev Adds a key-value pair to a map, or updates the value for an existing
-     * key. O(1).
-     *
-     * Returns true if the key was added to the map, that is if it was not
-     * already present.
-     */
-    function set(
-        Bytes32ToUintMap storage map,
-        bytes32 key,
-        uint256 value
-    ) internal returns (bool) {
-        return set(map._inner, key, bytes32(value));
-    }
-
-    /**
-     * @dev Removes a value from a set. O(1).
-     *
-     * Returns true if the key was removed from the map, that is if it was present.
-     */
-    function remove(Bytes32ToUintMap storage map, bytes32 key) internal returns (bool) {
-        return remove(map._inner, key);
-    }
-
-    /**
-     * @dev Returns true if the key is in the map. O(1).
-     */
-    function contains(Bytes32ToUintMap storage map, bytes32 key) internal view returns (bool) {
-        return contains(map._inner, key);
-    }
-
-    /**
-     * @dev Returns the number of elements in the map. O(1).
-     */
-    function length(Bytes32ToUintMap storage map) internal view returns (uint256) {
-        return length(map._inner);
-    }
-
-    /**
-     * @dev Returns the element stored at position `index` in the set. O(1).
-     * Note that there are no guarantees on the ordering of values inside the
-     * array, and it may change when more values are added or removed.
-     *
-     * Requirements:
-     *
-     * - `index` must be strictly less than {length}.
-     */
-    function at(Bytes32ToUintMap storage map, uint256 index) internal view returns (bytes32, uint256) {
-        (bytes32 key, bytes32 value) = at(map._inner, index);
-        return (key, uint256(value));
-    }
-
-    /**
-     * @dev Tries to returns the value associated with `key`. O(1).
-     * Does not revert if `key` is not in the map.
-     */
-    function tryGet(Bytes32ToUintMap storage map, bytes32 key) internal view returns (bool, uint256) {
-        (bool success, bytes32 value) = tryGet(map._inner, key);
-        return (success, uint256(value));
-    }
-
-    /**
-     * @dev Returns the value associated with `key`. O(1).
-     *
-     * Requirements:
-     *
-     * - `key` must be in the map.
-     */
-    function get(Bytes32ToUintMap storage map, bytes32 key) internal view returns (uint256) {
-        return uint256(get(map._inner, key));
-    }
-
-    /**
-     * @dev Same as {get}, with a custom error message when `key` is not in the map.
-     *
-     * CAUTION: This function is deprecated because it requires allocating memory for the error
-     * message unnecessarily. For custom revert reasons use {tryGet}.
-     */
-    function get(
-        Bytes32ToUintMap storage map,
-        bytes32 key,
-        string memory errorMessage
-    ) internal view returns (uint256) {
-        return uint256(get(map._inner, key, errorMessage));
-    }
-}
-
-
-// File contracts/errorCoded.sol
+// File contracts/ErrorCoded.sol
 
 // Copyright FMR LLC
 pragma solidity 0.8.9;
@@ -3392,33 +2861,38 @@ pragma solidity 0.8.9;
  */
 
 library ErrorCoded {
-    string public constant ERR_1 =
-        "MintableToken: Unable to transfer to or from addresses on transfer restriction list";
-    string public constant ERR_2 =
-        "MintableToken: Unable to restrict transfers of 0 address";
-    string public constant ERR_3 =
-        "Proxiable: Contract must be deployed prior to upgrading";
-    string public constant ERR_4 =
-        "MintableToken: Amount must be less than the current mint allocation for a minter";
-    string public constant ERR_5 =
-        "MintableToken: Default Admin cannot renounce own role";
-    string public constant ERR_6 =
-        "MintableToken: Unable to adjust the mint allocation for a non-minter";
-    string public constant ERR_7 =
+    string public constant ERR_TRANSFER_RESTRICTED =
+        "Restrictable: Unable to transfer to or from addresses on transfer restriction list";
+    string public constant ERR_TRANSFER_RESTRICTION_INVALID =
+        "Restrictable: Unable to restrict transfers of 0 address";
+    string public constant ERR_CONTRACT_NOT_DEPLOYED =
+        "MintableToken: Contract must be deployed prior to upgrading";
+    string public constant ERR_INSUFFICIENT_MINT_ALLOCATION =
+        "MintAllocated: Amount must be less than or equal to the current mint allocation for a minter";
+    string public constant ERR_DEFAULT_ADMIN_CANNOT_RENOUNCE =
+        "SafeAccessControlEnumerable: Default Admin cannot renounce own role";
+    string public constant ERR_ONLY_MINTERS_HAVE_MINT_ALLOCATIONS =
+        "MintAllocated: Unable to adjust the mint allocation for a non-minter";
+    string public constant ERR_ADMIN_ADDRESS_INVALID =
         "MintableToken: Admin address cannot be set to 0";
-    string public constant ERR_8 = "MintableToken: Address must be a minter.";
-    string public constant ERR_9 =
-        "MintableToken: Decrease amount can not be greater than current amount of Mint allocated";
-    string public constant ERR_10 =
-        "MintableToken: Can't revoke or renounce role of the Default Admin when there is only one remaining";
-    string public constant ERR_11 = "MintableToken: Arithmetic overflow";
-    string public constant ERR_12 =
+    string public constant ERR_CANNOT_REVOKE_LAST_DEFAULT_ADMIN =
+        "SafeAccessControlEnumerable: Can't revoke or renounce role of the Default Admin when there is only one remaining";
+    string public constant ERR_ARITHMETIC_OVERFLOW_ALLOWANCE =
+        "MintableToken: Arithmetic overflow";
+    string public constant ERR_ARITHMETIC_OVERFLOW_MINT =
+        "MintAllocated: Arithmetic overflow";
+    string public constant ERR_INVALID_RECIPIENT =
         "MintableToken: Token cannot be transferred to token contract";
-    string public constant ERR_13 = "MintableToken: User does not have role";
+    string public constant ERR_USER_DOES_NOT_HAVE_ROLE =
+        "SafeAccessControlEnumerable: User does not have role";
+    string public constant ERR_RESTRICT_TRANSFERS_ADD =
+        "Restrictable: User already in transfer restriction list";
+    string public constant ERR_RESTRICT_TRANSFERS_REMOVE =
+        "Restrictable: User not in transfer restriction list";
 }
 
 
-// File contracts/roleManaged.sol
+// File contracts/RoleManaged.sol
 
 // Copyright FMR LLC
 pragma solidity 0.8.9;
@@ -3440,8 +2914,9 @@ library RoleManaged {
      *  PAUSER_ROLE: Pause
      */
 
+    // DEFAULT ADMIN_ROLE is inherited from OpenZeppelin AccessControlUpgradeable
+    // See https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/v4.8.1/contracts/access/AccessControlUpgradeable.sol#L63
     // DEFAULT_ADMIN_ROLE: 0x0000000000000000000000000000000000000000000000000000000000000000
-    bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
 
     // UPGRADER_ROLE: 0x189ab7a9244df0848122154315af71fe140f3db0fe014031783b0946b8c9d2e3
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");
@@ -3462,7 +2937,7 @@ library RoleManaged {
 }
 
 
-// File contracts/mintAllocated.sol
+// File contracts/RestrictableUpgradeable.sol
 
 // Copyright FMR LLC
 pragma solidity 0.8.9;
@@ -3472,20 +2947,172 @@ pragma solidity 0.8.9;
 
 
 /**
- * @title MintAllocated
- * @dev MintAllocated enables token minting by addresses with the minter role
- * in accordance with allotments set by mint allocators
+ * @title RestrictableUpgradeable
+ * @dev RestrictableUpgradeable allows accounts to be transfer restricted
+ * preventing them from sending or receiving tokens
  */
 
-contract MintAllocated is
+contract RestrictableUpgradeable is
     Initializable,
     AccessControlEnumerableUpgradeable,
     PausableUpgradeable,
     ERC20Upgradeable
 {
-    function __MintAllocated_init() internal onlyInitializing {}
+    using EnumerableSetUpgradeable for EnumerableSetUpgradeable.AddressSet;
+    //mapping an address to the transfer restriction list
+    EnumerableSetUpgradeable.AddressSet private restricted;
 
-    function __MintAllocated_init_unchained() internal onlyInitializing {}
+    function __RestrictableUpgradeable_init() internal onlyInitializing {}
+
+    function __RestrictableUpgradeable_init_unchained()
+        internal
+        onlyInitializing
+    {}
+
+    /**
+     * @dev Emitted when an account is added to, or removed from the transfer restriction list
+     */
+    event TransferRestrictionImposed(address indexed account);
+    event TransferRestrictionRemoved(address indexed account);
+
+    modifier whenNotRestricted(address actionAccount) {
+        require(
+            !(isTransferRestrictionImposed(actionAccount)),
+            ErrorCoded.ERR_TRANSFER_RESTRICTED
+        );
+        _;
+    }
+
+    /**
+     * @dev Unpauses the contract
+     *
+     * @notice Only the admin will be able to unpause the contract
+     */
+    function unpause() external virtual onlyRole(DEFAULT_ADMIN_ROLE) {
+        _unpause();
+    }
+
+    /**
+     * @dev When paused, most functions of the contract will be unusable until the contract is unpaused
+     *
+     * @notice Only pausers can use the `pause` function
+     */
+    function pause() external virtual onlyRole(RoleManaged.PAUSER_ROLE) {
+        _pause();
+    }
+
+    /**
+     * @dev Restricts `restrictedAddress` from making token transfers
+     *
+     * @param restrictedAddress address of account to add to the transfer restriction list
+     *
+     * @notice Only token transfer controllers can use the `restrictTransfers` function
+     */
+    function restrictTransfers(
+        address restrictedAddress
+    ) external virtual onlyRole(RoleManaged.TOKEN_TRANSFER_CONTROLLER_ROLE) {
+        require(
+            restrictedAddress != address(0),
+            ErrorCoded.ERR_TRANSFER_RESTRICTION_INVALID
+        );
+        bool success = EnumerableSetUpgradeable.add(
+            restricted,
+            restrictedAddress
+        );
+        require(success, ErrorCoded.ERR_RESTRICT_TRANSFERS_ADD);
+        emit TransferRestrictionImposed(restrictedAddress);
+    }
+
+    /**
+     * @dev Unrestricts `restrictedAddress` allowing them to make transfers again
+     *
+     * @param restrictedAddress address to be removed from the transfer restriction list
+     *
+     * @notice Only token transfer controllers can use the `unrestrictTransfers` function
+     */
+    function unrestrictTransfers(
+        address restrictedAddress
+    ) external virtual onlyRole(RoleManaged.TOKEN_TRANSFER_CONTROLLER_ROLE) {
+        bool success = EnumerableSetUpgradeable.remove(
+            restricted,
+            restrictedAddress
+        );
+        require(success, ErrorCoded.ERR_RESTRICT_TRANSFERS_REMOVE);
+        emit TransferRestrictionRemoved(restrictedAddress);
+    }
+
+    /**
+     * @dev Verifies if an address is on the transfer restriction list
+     *
+     * @param account address for which we are checking transferability
+     */
+    function isTransferRestrictionImposed(
+        address account
+    ) public view virtual returns (bool) {
+        return EnumerableSetUpgradeable.contains(restricted, account);
+    }
+
+    /**
+     * @dev Finds transfer restricted address by index
+     *
+     * @param index index in the transfer restriction list to fetch
+     */
+    function getTransferRestriction(
+        uint256 index
+    ) external view virtual returns (address) {
+        return EnumerableSetUpgradeable.at(restricted, index);
+    }
+
+    /**
+     * @dev Find number of transfer restricted addresses
+     */
+    function getTransferRestrictionCount()
+        external
+        view
+        virtual
+        returns (uint256)
+    {
+        return EnumerableSetUpgradeable.length(restricted);
+    }
+
+    /**
+     * @dev This empty reserved space is put in place to allow future versions to add new
+     * variables without shifting down storage in the inheritance chain.
+     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
+     */
+    uint256[48] private __gap;
+}
+
+
+// File contracts/MintAllocatedUpgradeable.sol
+
+// Copyright FMR LLC
+pragma solidity 0.8.9;
+
+
+
+
+
+
+/**
+ * @title MintAllocatedUpgradeable
+ * @dev MintAllocatedUpgradeable enables token minting by addresses with the minter role
+ * in accordance with allotments set by mint allocators
+ */
+
+contract MintAllocatedUpgradeable is
+    Initializable,
+    AccessControlEnumerableUpgradeable,
+    PausableUpgradeable,
+    ERC20Upgradeable,
+    RestrictableUpgradeable
+{
+    function __MintAllocatedUpgradeable_init() internal onlyInitializing {}
+
+    function __MintAllocatedUpgradeable_init_unchained()
+        internal
+        onlyInitializing
+    {}
 
     /**
      * @dev Mint Allocation is a per-minter allocation which allows minters to mint a certain number of tokens
@@ -3508,7 +3135,7 @@ contract MintAllocated is
     modifier isMinter(address actionAccount) {
         require(
             hasRole(RoleManaged.MINTER_ROLE, actionAccount),
-            ErrorCoded.ERR_6
+            ErrorCoded.ERR_ONLY_MINTERS_HAVE_MINT_ALLOCATIONS
         );
         _;
     }
@@ -3533,8 +3160,8 @@ contract MintAllocated is
         isMinter(minter)
     {
         require(
-            type(uint).max - mintAllocation[minter] >= amount,
-            ErrorCoded.ERR_11
+            type(uint256).max - mintAllocation[minter] >= amount,
+            ErrorCoded.ERR_ARITHMETIC_OVERFLOW_MINT
         );
         unchecked {
             mintAllocation[minter] = mintAllocation[minter] + amount;
@@ -3590,8 +3217,19 @@ contract MintAllocated is
     function mint(
         address to,
         uint256 amount
-    ) external virtual onlyRole(RoleManaged.MINTER_ROLE) {
-        require(amount <= mintAllocation[_msgSender()], ErrorCoded.ERR_4);
+    )
+        external
+        virtual
+        whenNotPaused
+        onlyRole(RoleManaged.MINTER_ROLE)
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(to)
+        whenNotRestricted(tx.origin)
+    {
+        require(
+            amount <= mintAllocation[_msgSender()],
+            ErrorCoded.ERR_INSUFFICIENT_MINT_ALLOCATION
+        );
         _mint(to, amount);
         unchecked {
             mintAllocation[_msgSender()] =
@@ -3610,7 +3248,14 @@ contract MintAllocated is
      */
     function burn(
         uint256 amount
-    ) external virtual onlyRole(RoleManaged.MINTER_ROLE) {
+    )
+        external
+        virtual
+        whenNotPaused
+        onlyRole(RoleManaged.MINTER_ROLE)
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(tx.origin)
+    {
         _burn(_msgSender(), amount);
         emit Burn(_msgSender(), amount);
     }
@@ -3624,7 +3269,15 @@ contract MintAllocated is
     function burnFrom(
         address account,
         uint256 amount
-    ) external virtual onlyRole(RoleManaged.MINTER_ROLE) {
+    )
+        external
+        virtual
+        whenNotPaused
+        onlyRole(RoleManaged.MINTER_ROLE)
+        whenNotRestricted(account)
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(tx.origin)
+    {
         if (account != _msgSender()) {
             _spendAllowance(account, _msgSender(), amount);
         }
@@ -3637,149 +3290,14 @@ contract MintAllocated is
      * variables without shifting down storage in the inheritance chain.
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
-    uint256[50] private __gap;
+    uint256[49] private __gap;
 }
 
 
-// File contracts/restrictable.sol
+// File contracts/SafeAccessControlEnumerableUpgradeable.sol
 
 // Copyright FMR LLC
 pragma solidity 0.8.9;
-
-
-
-
-
-
-/**
- * @title Restrictable
- * @dev Restrictable allows accounts to be transfer restricted
- * preventing them from sending or receiving tokens
- */
-
-contract Restrictable is
-    Initializable,
-    AccessControlEnumerableUpgradeable,
-    PausableUpgradeable,
-    ERC20Upgradeable
-{
-    using EnumerableSetUpgradeable for EnumerableSetUpgradeable.AddressSet;
-    //mapping an address to the transfer restriction list
-    EnumerableSetUpgradeable.AddressSet private restricted;
-
-    function __Restrictable_init() internal onlyInitializing {}
-
-    function __Restrictable_init_unchained() internal onlyInitializing {}
-
-    /**
-     * @dev Emitted when an account is added to, or removed from the transfer restriction list
-     */
-    event TransferRestrictionImposed(address indexed account);
-    event TransferRestrictionRemoved(address indexed account);
-
-    modifier whenNotRestricted(address actionAccount) {
-        require(
-            !(isTransferRestrictionImposed(actionAccount)),
-            ErrorCoded.ERR_1
-        );
-        _;
-    }
-
-    /**
-     * @dev Unpauses the contract
-     *
-     * @notice Only the admin will be able to unpause the contract
-     */
-    function unpause() external virtual onlyRole(DEFAULT_ADMIN_ROLE) {
-        _unpause();
-    }
-
-    /**
-     * @dev When paused, most functions of the contract will be unusable until the contract is unpaused
-     *
-     * @notice Only pausers can use the `pause` function
-     */
-    function pause() external virtual onlyRole(RoleManaged.PAUSER_ROLE) {
-        _pause();
-    }
-
-    /**
-     * @dev Restricts `restrictedAddress` from making token transfers
-     *
-     * @param restrictedAddress address of account to add to the transfer restriction list
-     *
-     * @notice Only token transfer controllers can use the `restrictTransfers` function
-     */
-    function restrictTransfers(
-        address restrictedAddress
-    ) external virtual onlyRole(RoleManaged.TOKEN_TRANSFER_CONTROLLER_ROLE) {
-        require(restrictedAddress != address(0), ErrorCoded.ERR_2);
-        EnumerableSetUpgradeable.add(restricted, restrictedAddress);
-        emit TransferRestrictionImposed(restrictedAddress);
-    }
-
-    /**
-     * @dev Unrestricts `restrictedAddress` allowing them to make transfers again
-     *
-     * @param restrictedAddress address to be removed from the transfer restriction list
-     *
-     * @notice Only token transfer controllers can use the `unrestrictTransfers` function
-     */
-    function unrestrictTransfers(
-        address restrictedAddress
-    ) external virtual onlyRole(RoleManaged.TOKEN_TRANSFER_CONTROLLER_ROLE) {
-        EnumerableSetUpgradeable.remove(restricted, restrictedAddress);
-        emit TransferRestrictionRemoved(restrictedAddress);
-    }
-
-    /**
-     * @dev Verifies if an address is on the transfer restriction list
-     *
-     * @param account address for which we are checking transferability
-     */
-    function isTransferRestrictionImposed(
-        address account
-    ) public view virtual returns (bool) {
-        return EnumerableSetUpgradeable.contains(restricted, account);
-    }
-
-    /**
-     * @dev Finds transfer restricted address by index
-     *
-     * @param index index in the transfer restriction list to fetch
-     */
-    function getTransferRestriction(
-        uint256 index
-    ) external view virtual returns (address) {
-        return EnumerableSetUpgradeable.at(restricted, index);
-    }
-
-    /**
-     * @dev Find number of transfer restricted addresses
-     */
-    function getTransferRestrictionCount()
-        external
-        view
-        virtual
-        returns (uint256)
-    {
-        return EnumerableSetUpgradeable.length(restricted);
-    }
-
-    /**
-     * @dev This empty reserved space is put in place to allow future versions to add new
-     * variables without shifting down storage in the inheritance chain.
-     * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
-     */
-    uint256[50] private __gap;
-}
-
-
-// File contracts/safeAccessControlEnumerableUpgradeable.sol
-
-// Copyright FMR LLC
-pragma solidity 0.8.9;
-
 
 
 
@@ -3797,14 +3315,11 @@ contract SafeAccessControlEnumerableUpgradeable is
     Initializable,
     AccessControlEnumerableUpgradeable,
     ERC20Upgradeable,
-    MintAllocated
+    MintAllocatedUpgradeable
 {
-    function __SafeAccessControlEnumerableUpgradeable_init()
-        internal
-        onlyInitializing
-    {}
+    function __SafeAccessControlEnumerable_init() internal onlyInitializing {}
 
-    function __SafeAccessControlEnumerableUpgradeable_init_unchained()
+    function __SafeAccessControlEnumerable_init_unchained()
         internal
         onlyInitializing
     {}
@@ -3848,7 +3363,7 @@ contract SafeAccessControlEnumerableUpgradeable is
      * @notice We set Mint Allocation to 0 if we revoke or renounce Minter Role
      */
     function _safeRevokeRenounce(bytes32 role, address account) internal {
-        require(hasRole(role, account), ErrorCoded.ERR_13);
+        require(hasRole(role, account), ErrorCoded.ERR_USER_DOES_NOT_HAVE_ROLE);
         if (role == RoleManaged.MINTER_ROLE) {
             unchecked {
                 mintAllocation[account] = 0;
@@ -3863,10 +3378,13 @@ contract SafeAccessControlEnumerableUpgradeable is
         // Admin is not allowed to revoke its own role. This is to prevent accidental
         // loss of control of the contract
         if (role == DEFAULT_ADMIN_ROLE) {
-            require(_msgSender() != account, ErrorCoded.ERR_5);
+            require(
+                _msgSender() != account,
+                ErrorCoded.ERR_DEFAULT_ADMIN_CANNOT_RENOUNCE
+            );
             require(
                 getRoleMemberCount(DEFAULT_ADMIN_ROLE) > 1,
-                ErrorCoded.ERR_10
+                ErrorCoded.ERR_CANNOT_REVOKE_LAST_DEFAULT_ADMIN
             );
         }
     }
@@ -3886,7 +3404,6 @@ contract SafeAccessControlEnumerableUpgradeable is
 pragma solidity 0.8.9;
 
 
-
 // Custom modules
 
 
@@ -3900,8 +3417,8 @@ pragma solidity 0.8.9;
 
 contract MintableToken is
     UUPSUpgradeable,
-    Restrictable,
-    MintAllocated,
+    RestrictableUpgradeable,
+    MintAllocatedUpgradeable,
     SafeAccessControlEnumerableUpgradeable
 {
     using RoleManaged for bytes32;
@@ -3934,18 +3451,20 @@ contract MintableToken is
         string calldata _symbol,
         address _admin
     ) external initializer {
-        require(_admin != address(0), ErrorCoded.ERR_7);
+        require(_admin != address(0), ErrorCoded.ERR_ADMIN_ADDRESS_INVALID);
 
         __ERC20_init(_name, _symbol);
         __Pausable_init();
         __UUPSUpgradeable_init();
         __Context_init();
-        __SafeAccessControlEnumerableUpgradeable_init();
+        __AccessControl_init();
+        __AccessControlEnumerable_init();
         __ERC165_init();
         __ERC1967Upgrade_init();
         //custom features
-        __MintAllocated_init();
-        __Restrictable_init();
+        __MintAllocatedUpgradeable_init();
+        __RestrictableUpgradeable_init();
+        __SafeAccessControlEnumerable_init();
         //RBAC
         _grantRole(DEFAULT_ADMIN_ROLE, _admin);
     }
@@ -3997,11 +3516,15 @@ contract MintableToken is
     {
         uint256 currentAllowance = allowance(_msgSender(), spender);
         require(
-            type(uint).max - currentAllowance >= addedValue,
-            ErrorCoded.ERR_11
+            type(uint256).max - currentAllowance >= addedValue,
+            ErrorCoded.ERR_ARITHMETIC_OVERFLOW_ALLOWANCE
         );
         unchecked {
-            _modifyAllowance(spender, currentAllowance + addedValue);
+            ERC20Upgradeable._approve(
+                _msgSender(),
+                spender,
+                currentAllowance + addedValue
+            );
         }
         return true;
     }
@@ -4029,7 +3552,31 @@ contract MintableToken is
             ? currentAllowance - subtractedValue
             : 0;
 
-        _modifyAllowance(spender, newAllowance);
+        ERC20Upgradeable._approve(_msgSender(), spender, newAllowance);
+        return true;
+    }
+
+    /**
+     * @dev Moves `amount` tokens from msg.sender() to `to`
+     *
+     * @param to recipient of transfer
+     * @param amount quantity of tokens transferred
+     */
+    function transfer(
+        address to,
+        uint256 amount
+    )
+        public
+        virtual
+        override
+        whenNotPaused
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(to)
+        whenNotRestricted(tx.origin)
+        returns (bool)
+    {
+        address owner = _msgSender();
+        ERC20Upgradeable._transfer(owner, to, amount);
         return true;
     }
 
@@ -4046,7 +3593,17 @@ contract MintableToken is
         address from,
         address to,
         uint256 amount
-    ) public virtual override whenNotRestricted(_msgSender()) returns (bool) {
+    )
+        public
+        virtual
+        override
+        whenNotPaused
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(from)
+        whenNotRestricted(to)
+        whenNotRestricted(tx.origin)
+        returns (bool)
+    {
         ERC20Upgradeable._spendAllowance(from, _msgSender(), amount);
         ERC20Upgradeable._transfer(from, to, amount);
         return true;
@@ -4062,25 +3619,17 @@ contract MintableToken is
         address from,
         address to,
         uint256 amount
-    )
-        internal
-        override
-        whenNotRestricted(from)
-        whenNotRestricted(to)
-        whenNotRestricted(tx.origin)
-        whenNotPaused
-    {
-        require(to != address(this), ErrorCoded.ERR_12);
+    ) internal override {
+        require(to != address(this), ErrorCoded.ERR_INVALID_RECIPIENT);
         ERC20Upgradeable._beforeTokenTransfer(from, to, amount);
     }
 
     function _authorizeUpgrade(
         address newImplementation
     ) internal view override onlyRole(RoleManaged.UPGRADER_ROLE) {
-        require(newImplementation.code.length > 0, ErrorCoded.ERR_3);
-    }
-
-    function _modifyAllowance(address spender, uint256 value) internal {
-        ERC20Upgradeable._approve(_msgSender(), spender, value);
+        require(
+            newImplementation.code.length > 0,
+            ErrorCoded.ERR_CONTRACT_NOT_DEPLOYED
+        );
     }
 }
