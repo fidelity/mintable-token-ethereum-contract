@@ -6,7 +6,6 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableMapUpgradeable.sol";
 
 import "./ErrorCoded.sol";
 import "./RoleManaged.sol";
@@ -43,7 +42,7 @@ contract RestrictableUpgradeable is
     modifier whenNotRestricted(address actionAccount) {
         require(
             !(isTransferRestrictionImposed(actionAccount)),
-            ErrorCoded.ERR_1
+            ErrorCoded.ERR_TRANSFER_RESTRICTED
         );
         _;
     }
@@ -76,8 +75,15 @@ contract RestrictableUpgradeable is
     function restrictTransfers(
         address restrictedAddress
     ) external virtual onlyRole(RoleManaged.TOKEN_TRANSFER_CONTROLLER_ROLE) {
-        require(restrictedAddress != address(0), ErrorCoded.ERR_2);
-        EnumerableSetUpgradeable.add(restricted, restrictedAddress);
+        require(
+            restrictedAddress != address(0),
+            ErrorCoded.ERR_TRANSFER_RESTRICTION_INVALID
+        );
+        bool success = EnumerableSetUpgradeable.add(
+            restricted,
+            restrictedAddress
+        );
+        require(success, ErrorCoded.ERR_RESTRICT_TRANSFERS_ADD);
         emit TransferRestrictionImposed(restrictedAddress);
     }
 
@@ -91,7 +97,11 @@ contract RestrictableUpgradeable is
     function unrestrictTransfers(
         address restrictedAddress
     ) external virtual onlyRole(RoleManaged.TOKEN_TRANSFER_CONTROLLER_ROLE) {
-        EnumerableSetUpgradeable.remove(restricted, restrictedAddress);
+        bool success = EnumerableSetUpgradeable.remove(
+            restricted,
+            restrictedAddress
+        );
+        require(success, ErrorCoded.ERR_RESTRICT_TRANSFERS_REMOVE);
         emit TransferRestrictionRemoved(restrictedAddress);
     }
 
@@ -134,5 +144,5 @@ contract RestrictableUpgradeable is
      * variables without shifting down storage in the inheritance chain.
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
-    uint256[50] private __gap;
+    uint256[48] private __gap;
 }

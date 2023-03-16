@@ -58,14 +58,5 @@ describe("TxOrigin Transfer function", async () => {
     ).to.be.revertedWith(
       "Unable to transfer to or from addresses on transfer restriction list"
     );
-    await token
-      .connect(tokenTransferController)
-      .restrictTransfers(user1.address);
-
-    await expect(
-      tokenProxy.connect(user1).transfer(user2.address, 50)
-    ).to.be.revertedWith(
-      "Unable to transfer to or from addresses on transfer restriction list"
-    );
   });
 });

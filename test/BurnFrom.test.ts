@@ -69,7 +69,7 @@ describe("burnFrom", async () => {
       .restrictTransfers(other.address);
 
     const error =
-      "MintableToken: Unable to transfer to or from addresses on transfer restriction list";
+      "Restrictable: Unable to transfer to or from addresses on transfer restriction list";
 
     // Burn allowed amount
     await expect(

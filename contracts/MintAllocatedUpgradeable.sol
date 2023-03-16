@@ -8,6 +8,7 @@ import "@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgrad
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
 import "./ErrorCoded.sol";
+import "./RestrictableUpgradeable.sol";
 import "./RoleManaged.sol";
 
 /**
@@ -20,7 +21,8 @@ contract MintAllocatedUpgradeable is
     Initializable,
     AccessControlEnumerableUpgradeable,
     PausableUpgradeable,
-    ERC20Upgradeable
+    ERC20Upgradeable,
+    RestrictableUpgradeable
 {
     function __MintAllocatedUpgradeable_init() internal onlyInitializing {}
 
@@ -50,7 +52,7 @@ contract MintAllocatedUpgradeable is
     modifier isMinter(address actionAccount) {
         require(
             hasRole(RoleManaged.MINTER_ROLE, actionAccount),
-            ErrorCoded.ERR_6
+            ErrorCoded.ERR_ONLY_MINTERS_HAVE_MINT_ALLOCATIONS
         );
         _;
     }
@@ -75,8 +77,8 @@ contract MintAllocatedUpgradeable is
         isMinter(minter)
     {
         require(
-            type(uint).max - mintAllocation[minter] >= amount,
-            ErrorCoded.ERR_11
+            type(uint256).max - mintAllocation[minter] >= amount,
+            ErrorCoded.ERR_ARITHMETIC_OVERFLOW_MINT
         );
         unchecked {
             mintAllocation[minter] = mintAllocation[minter] + amount;
@@ -132,8 +134,19 @@ contract MintAllocatedUpgradeable is
     function mint(
         address to,
         uint256 amount
-    ) external virtual onlyRole(RoleManaged.MINTER_ROLE) {
-        require(amount <= mintAllocation[_msgSender()], ErrorCoded.ERR_4);
+    )
+        external
+        virtual
+        whenNotPaused
+        onlyRole(RoleManaged.MINTER_ROLE)
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(to)
+        whenNotRestricted(tx.origin)
+    {
+        require(
+            amount <= mintAllocation[_msgSender()],
+            ErrorCoded.ERR_INSUFFICIENT_MINT_ALLOCATION
+        );
         _mint(to, amount);
         unchecked {
             mintAllocation[_msgSender()] =
@@ -152,7 +165,14 @@ contract MintAllocatedUpgradeable is
      */
     function burn(
         uint256 amount
-    ) external virtual onlyRole(RoleManaged.MINTER_ROLE) {
+    )
+        external
+        virtual
+        whenNotPaused
+        onlyRole(RoleManaged.MINTER_ROLE)
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(tx.origin)
+    {
         _burn(_msgSender(), amount);
         emit Burn(_msgSender(), amount);
     }
@@ -166,7 +186,15 @@ contract MintAllocatedUpgradeable is
     function burnFrom(
         address account,
         uint256 amount
-    ) external virtual onlyRole(RoleManaged.MINTER_ROLE) {
+    )
+        external
+        virtual
+        whenNotPaused
+        onlyRole(RoleManaged.MINTER_ROLE)
+        whenNotRestricted(account)
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(tx.origin)
+    {
         if (account != _msgSender()) {
             _spendAllowance(account, _msgSender(), amount);
         }
@@ -179,5 +207,5 @@ contract MintAllocatedUpgradeable is
      * variables without shifting down storage in the inheritance chain.
      * See https://docs.openzeppelin.com/contracts/4.x/upgradeable#storage_gaps
      */
-    uint256[50] private __gap;
+    uint256[49] private __gap;
 }

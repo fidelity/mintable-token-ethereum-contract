@@ -11,6 +11,7 @@ import "@openzeppelin/hardhat-upgrades";
 import "hardhat-deploy";
 import "hardhat-gas-reporter";
 import "hardhat-contract-sizer";
+import "hardhat-storage-layout";
 import "solidity-coverage";
 import "@openzeppelin/test-helpers";
 

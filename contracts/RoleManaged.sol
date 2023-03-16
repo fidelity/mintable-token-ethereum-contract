@@ -19,8 +19,9 @@ library RoleManaged {
      *  PAUSER_ROLE: Pause
      */
 
+    // DEFAULT ADMIN_ROLE is inherited from OpenZeppelin AccessControlUpgradeable
+    // See https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/v4.8.1/contracts/access/AccessControlUpgradeable.sol#L63
     // DEFAULT_ADMIN_ROLE: 0x0000000000000000000000000000000000000000000000000000000000000000
-    bytes32 public constant DEFAULT_ADMIN_ROLE = 0x00;
 
     // UPGRADER_ROLE: 0x189ab7a9244df0848122154315af71fe140f3db0fe014031783b0946b8c9d2e3
     bytes32 public constant UPGRADER_ROLE = keccak256("UPGRADER_ROLE");

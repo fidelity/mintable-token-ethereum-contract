@@ -8,27 +8,32 @@ pragma solidity 0.8.9;
  */
 
 library ErrorCoded {
-    string public constant ERR_1 =
-        "MintableToken: Unable to transfer to or from addresses on transfer restriction list";
-    string public constant ERR_2 =
-        "MintableToken: Unable to restrict transfers of 0 address";
-    string public constant ERR_3 =
-        "Proxiable: Contract must be deployed prior to upgrading";
-    string public constant ERR_4 =
-        "MintableToken: Amount must be less than the current mint allocation for a minter";
-    string public constant ERR_5 =
-        "MintableToken: Default Admin cannot renounce own role";
-    string public constant ERR_6 =
-        "MintableToken: Unable to adjust the mint allocation for a non-minter";
-    string public constant ERR_7 =
+    string public constant ERR_TRANSFER_RESTRICTED =
+        "Restrictable: Unable to transfer to or from addresses on transfer restriction list";
+    string public constant ERR_TRANSFER_RESTRICTION_INVALID =
+        "Restrictable: Unable to restrict transfers of 0 address";
+    string public constant ERR_CONTRACT_NOT_DEPLOYED =
+        "MintableToken: Contract must be deployed prior to upgrading";
+    string public constant ERR_INSUFFICIENT_MINT_ALLOCATION =
+        "MintAllocated: Amount must be less than or equal to the current mint allocation for a minter";
+    string public constant ERR_DEFAULT_ADMIN_CANNOT_RENOUNCE =
+        "SafeAccessControlEnumerable: Default Admin cannot renounce own role";
+    string public constant ERR_ONLY_MINTERS_HAVE_MINT_ALLOCATIONS =
+        "MintAllocated: Unable to adjust the mint allocation for a non-minter";
+    string public constant ERR_ADMIN_ADDRESS_INVALID =
         "MintableToken: Admin address cannot be set to 0";
-    string public constant ERR_8 = "MintableToken: Address must be a minter.";
-    string public constant ERR_9 =
-        "MintableToken: Decrease amount can not be greater than current amount of Mint allocated";
-    string public constant ERR_10 =
-        "MintableToken: Can't revoke or renounce role of the Default Admin when there is only one remaining";
-    string public constant ERR_11 = "MintableToken: Arithmetic overflow";
-    string public constant ERR_12 =
+    string public constant ERR_CANNOT_REVOKE_LAST_DEFAULT_ADMIN =
+        "SafeAccessControlEnumerable: Can't revoke or renounce role of the Default Admin when there is only one remaining";
+    string public constant ERR_ARITHMETIC_OVERFLOW_ALLOWANCE =
+        "MintableToken: Arithmetic overflow";
+    string public constant ERR_ARITHMETIC_OVERFLOW_MINT =
+        "MintAllocated: Arithmetic overflow";
+    string public constant ERR_INVALID_RECIPIENT =
         "MintableToken: Token cannot be transferred to token contract";
-    string public constant ERR_13 = "MintableToken: User does not have role";
+    string public constant ERR_USER_DOES_NOT_HAVE_ROLE =
+        "SafeAccessControlEnumerable: User does not have role";
+    string public constant ERR_RESTRICT_TRANSFERS_ADD =
+        "Restrictable: User already in transfer restriction list";
+    string public constant ERR_RESTRICT_TRANSFERS_REMOVE =
+        "Restrictable: User not in transfer restriction list";
 }

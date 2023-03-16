@@ -3,7 +3,6 @@
 pragma solidity 0.8.9;
 
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 // Custom modules
@@ -54,18 +53,20 @@ contract MintableToken is
         string calldata _symbol,
         address _admin
     ) external initializer {
-        require(_admin != address(0), ErrorCoded.ERR_7);
+        require(_admin != address(0), ErrorCoded.ERR_ADMIN_ADDRESS_INVALID);
 
         __ERC20_init(_name, _symbol);
         __Pausable_init();
         __UUPSUpgradeable_init();
         __Context_init();
-        __SafeAccessControlEnumerableUpgradeable_init();
+        __AccessControl_init();
+        __AccessControlEnumerable_init();
         __ERC165_init();
         __ERC1967Upgrade_init();
         //custom features
         __MintAllocatedUpgradeable_init();
         __RestrictableUpgradeable_init();
+        __SafeAccessControlEnumerable_init();
         //RBAC
         _grantRole(DEFAULT_ADMIN_ROLE, _admin);
     }
@@ -117,11 +118,15 @@ contract MintableToken is
     {
         uint256 currentAllowance = allowance(_msgSender(), spender);
         require(
-            type(uint).max - currentAllowance >= addedValue,
-            ErrorCoded.ERR_11
+            type(uint256).max - currentAllowance >= addedValue,
+            ErrorCoded.ERR_ARITHMETIC_OVERFLOW_ALLOWANCE
         );
         unchecked {
-            _modifyAllowance(spender, currentAllowance + addedValue);
+            ERC20Upgradeable._approve(
+                _msgSender(),
+                spender,
+                currentAllowance + addedValue
+            );
         }
         return true;
     }
@@ -149,7 +154,31 @@ contract MintableToken is
             ? currentAllowance - subtractedValue
             : 0;
 
-        _modifyAllowance(spender, newAllowance);
+        ERC20Upgradeable._approve(_msgSender(), spender, newAllowance);
+        return true;
+    }
+
+    /**
+     * @dev Moves `amount` tokens from msg.sender() to `to`
+     *
+     * @param to recipient of transfer
+     * @param amount quantity of tokens transferred
+     */
+    function transfer(
+        address to,
+        uint256 amount
+    )
+        public
+        virtual
+        override
+        whenNotPaused
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(to)
+        whenNotRestricted(tx.origin)
+        returns (bool)
+    {
+        address owner = _msgSender();
+        ERC20Upgradeable._transfer(owner, to, amount);
         return true;
     }
 
@@ -166,7 +195,17 @@ contract MintableToken is
         address from,
         address to,
         uint256 amount
-    ) public virtual override whenNotRestricted(_msgSender()) returns (bool) {
+    )
+        public
+        virtual
+        override
+        whenNotPaused
+        whenNotRestricted(_msgSender())
+        whenNotRestricted(from)
+        whenNotRestricted(to)
+        whenNotRestricted(tx.origin)
+        returns (bool)
+    {
         ERC20Upgradeable._spendAllowance(from, _msgSender(), amount);
         ERC20Upgradeable._transfer(from, to, amount);
         return true;
@@ -182,25 +221,17 @@ contract MintableToken is
         address from,
         address to,
         uint256 amount
-    )
-        internal
-        override
-        whenNotRestricted(from)
-        whenNotRestricted(to)
-        whenNotRestricted(tx.origin)
-        whenNotPaused
-    {
-        require(to != address(this), ErrorCoded.ERR_12);
+    ) internal override {
+        require(to != address(this), ErrorCoded.ERR_INVALID_RECIPIENT);
         ERC20Upgradeable._beforeTokenTransfer(from, to, amount);
     }
 
     function _authorizeUpgrade(
         address newImplementation
     ) internal view override onlyRole(RoleManaged.UPGRADER_ROLE) {
-        require(newImplementation.code.length > 0, ErrorCoded.ERR_3);
-    }
-
-    function _modifyAllowance(address spender, uint256 value) internal {
-        ERC20Upgradeable._approve(_msgSender(), spender, value);
+        require(
+            newImplementation.code.length > 0,
+            ErrorCoded.ERR_CONTRACT_NOT_DEPLOYED
+        );
     }
 }

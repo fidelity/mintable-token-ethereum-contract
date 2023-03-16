@@ -5,7 +5,6 @@ pragma solidity 0.8.9;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/AccessControlEnumerableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableMapUpgradeable.sol";
 
 import "./MintAllocatedUpgradeable.sol";
 import "./ErrorCoded.sol";
@@ -25,12 +24,9 @@ contract SafeAccessControlEnumerableUpgradeable is
     ERC20Upgradeable,
     MintAllocatedUpgradeable
 {
-    function __SafeAccessControlEnumerableUpgradeable_init()
-        internal
-        onlyInitializing
-    {}
+    function __SafeAccessControlEnumerable_init() internal onlyInitializing {}
 
-    function __SafeAccessControlEnumerableUpgradeable_init_unchained()
+    function __SafeAccessControlEnumerable_init_unchained()
         internal
         onlyInitializing
     {}
@@ -74,7 +70,7 @@ contract SafeAccessControlEnumerableUpgradeable is
      * @notice We set Mint Allocation to 0 if we revoke or renounce Minter Role
      */
     function _safeRevokeRenounce(bytes32 role, address account) internal {
-        require(hasRole(role, account), ErrorCoded.ERR_13);
+        require(hasRole(role, account), ErrorCoded.ERR_USER_DOES_NOT_HAVE_ROLE);
         if (role == RoleManaged.MINTER_ROLE) {
             unchecked {
                 mintAllocation[account] = 0;
@@ -89,10 +85,13 @@ contract SafeAccessControlEnumerableUpgradeable is
         // Admin is not allowed to revoke its own role. This is to prevent accidental
         // loss of control of the contract
         if (role == DEFAULT_ADMIN_ROLE) {
-            require(_msgSender() != account, ErrorCoded.ERR_5);
+            require(
+                _msgSender() != account,
+                ErrorCoded.ERR_DEFAULT_ADMIN_CANNOT_RENOUNCE
+            );
             require(
                 getRoleMemberCount(DEFAULT_ADMIN_ROLE) > 1,
-                ErrorCoded.ERR_10
+                ErrorCoded.ERR_CANNOT_REVOKE_LAST_DEFAULT_ADMIN
             );
         }
     }
