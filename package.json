@@ -24,7 +24,7 @@
   },
   "author": "",
   "dependencies": {
-    "@openzeppelin/contracts-upgradeable": "4.8.1"
+    "@openzeppelin/contracts-upgradeable": "4.9.2"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-network-helpers": "^1.0.7",
