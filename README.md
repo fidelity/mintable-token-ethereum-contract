@@ -2,19 +2,19 @@
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-This is the official repository for Fidelity Digital Dollar (FIDD), a fully collateralized stablecoin pegged 1:1 with the US Dollar.
+This is the official repository for Fidelity Digital Dollar℠ (FIDD), a fully collateralized stablecoin pegged 1:1 with the US Dollar.
 
 The contracts in this repository are deployed to the Ethereum blockchain.
 
 ## Overview
 
-The Fidelity Digital Dollar (FIDD) is issued by Fidelity Digital Assets, National Association. FIDD is an ERC-20 token issued and managed on the Ethereum network that can be bought and redeemed for $1 on the Fidelity Digital Assets platform. It is backed by assets of an equal or greater value held in cash, U.S. treasuries or other safe, liquid assets. Circulating supply is controlled by Fidelity Digital Assets through the issuance and redemption of FIDD tokens in exchange for equal amounts of USD.
+The Fidelity Digital Dollar℠ (FIDD) is issued by Fidelity Digital Assets, National Association. FIDD is an ERC-20 token issued and managed on the Ethereum network that can be bought and redeemed for $1 on the Fidelity Digital Assets platform. It is backed by assets of an equal or greater value held in cash, U.S. treasuries or other safe, liquid assets. Circulating supply is controlled by Fidelity Digital Assets through the issuance and redemption of FIDD tokens in exchange for equal amounts of USD.
 
 ## Contract Addresses
 
 | Network | Address |
 | ------- | ------- |
-| Ethereum Mainnet | 0x7c135549504245b5eae64fc0e99fa5ebabb8e35d |
+| Ethereum Mainnet | 0x7C135549504245B5eAe64fc0E99Fa5ebabb8e35D |
 
 ## Smart Contract Details
 
